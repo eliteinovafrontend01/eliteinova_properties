@@ -57,7 +57,7 @@ const PropertyCard = ({ property, onContactClick }) => {
 
   return (
     <>
-      <div className="bg-gradient-to-br from-teal-50/90 via-emerald-50/90 to-teal-50/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 lg:p-8 border border-teal-200/30 hover:shadow-[0_0_60px_rgba(0,105,92,0.3)] transition-all duration-700 group mb-10 w-full lg:w-[85%] lg:ml-8">
+      <div className="bg-gradient-to-br from-teal-50/90 via-emerald-50/90 to-teal-50/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 lg:p-8 border border-teal-200/30 hover:shadow-[0_0_60px_rgba(0,105,92,0.3)] transition-all duration-700 group mb-10 w-full lg:w-[90%] lg:ml-8">
         
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT: IMAGE SECTION */}
