@@ -1,141 +1,221 @@
 export const VillaData = [
- 
-  // --- BUY CATEGORY (3 Items) ---
+  // BUY - Luxury Villa (Posted by OWNER)
   {
     id: 1,
     tag: "BUY",
     status: "NEW",
-    price: "₹15.0 Cr",
+    price: "₹15.0 Crores",
     sqftPrice: "₹7,500/sqft",
     totalSqft: "20,000 sqft",
     builtUp: "18,500 sqft (Under Construction)",
     location: "Ashok Nagar, Chennai-600091, Tamil Nadu",
-    highlights: "Fully Furnished | 5+ BHK | Ready to Move",
+    highlights: "Fully Furnished | 5+ BHK | Ready to Move | Luxury Villa",
     postedBy: "Priya Sharma",
-    images: ["./Villa/villa1_1.png", "p1", "p2", "p3", "p4"]
+    postedAs: "Owner",
+    logo: "./Villa/villa1_logo.png",
+    images: ["./Villa/villa1_1.png", "./Villa/villa1_2.png", "./Villa/villa1_3.png", "./Villa/villa1_4.png", "./Villa/villa1_5.png"],
+    agentDetails: "📍 Direct owner - No brokerage | 12+ years of property ownership | Can share original documents",
+    contactEmail: "priya.sharma@example.com",
+    contactPhone: "+91 98765 43210",
+    experience: "12+ years in real estate",
+    achievements: "Successfully sold 50+ luxury properties"
   },
+  
+  // RENT - Sea View Villa (Posted by OWNER)
   {
     id: 2,
-    tag: "BUY",
-    status: "RE-SALE",
-    price: "₹8.5 Cr",
-    sqftPrice: "₹12,000/sqft",
-    totalSqft: "7,000 sqft",
-    builtUp: "6,200 sqft (Ready to Occupy)",
-    location: "Adyar, Chennai-600020, Tamil Nadu",
-    highlights: "Semi-Furnished | 4 BHK | Private Pool",
-    postedBy: "Elite Realtors",
-    images: ["./Villa/villa2_1.png", "p1", "p2", "p3", "p4"]
-  },
-  {
-    id: 3,
-    tag: "BUY",
-    status: "NEW",
-    price: "₹4.2 Cr",
-    sqftPrice: "₹6,000/sqft",
-    totalSqft: "7,000 sqft",
-    builtUp: "5,500 sqft (Handover in 6 months)",
-    location: "OMR, Thoraipakkam, Chennai-600097, Tamil Nadu",
-    highlights: "Unfurnished | 3 BHK | Garden Facing",
-    postedBy: "Siva Kumar",
-    images: ["./Villa/villa3_1.png", "p1", "p2", "p3", "p4"]
-  },
-
-  // --- RENT CATEGORY (3 Items) ---
-  {
-    id: 4,
     tag: "RENT",
     status: "RE-SALE",
-    price: "₹1.5 Lakh/mo",
+    price: "₹1.5 Lakh/month",
     sqftPrice: "₹40/sqft",
     totalSqft: "3,750 sqft",
     builtUp: "3,500 sqft (Maintained)",
     location: "Besant Nagar, Chennai-600090, Tamil Nadu",
-    highlights: "Fully Furnished | 3 BHK | Sea View",
-    postedBy: "Admin",
-    images: ["./Villa/villa4_1.png", "p1", "p2", "p3", "p4"]
+    highlights: "Fully Furnished | 3 BHK | Sea View | Beach Villa",
+    postedBy: "Anaya Dev",
+    postedAs: "Owner",
+    logo: "",
+    images: ["./Villa/villa4_1.png", "./Villa/villa4_2.png", "./Villa/villa4_3.png", "./Villa/villa4_4.png", "./Villa/villa4_5.png"],
+    agentDetails: "👨‍💼 Property owner directly renting out | Verified documents | Family-friendly neighborhood",
+    contactEmail: "anaya.dev@example.com",
+    contactPhone: "+91 99887 66554",
+    experience: "5+ properties owned",
+    achievements: "100% tenant satisfaction"
   },
+  
+  // SELL - Premium Villa (Posted by SELLER)
   {
-    id: 5,
-    tag: "RENT",
-    status: "NEW",
-    price: "₹45,000/mo",
-    sqftPrice: "₹25/sqft",
-    totalSqft: "1,800 sqft",
-    builtUp: "1,650 sqft (Fresh Paint)",
-    location: "Anna Nagar, Chennai-600040, Tamil Nadu",
-    highlights: "Semi-Furnished | 2 BHK | Close to Metro",
-    postedBy: "Rajesh V",
-    images: ["./Villa/villa5_1.png", "p1", "p2", "p3", "p4"]
-  },
-  {
-    id: 6,
-    tag: "RENT",
-    status: "RE-SALE",
-    price: "₹85,000/mo",
-    sqftPrice: "₹30/sqft",
-    totalSqft: "2,800 sqft",
-    builtUp: "2,600 sqft (Prime Condition)",
-    location: "Mylapore, Chennai-600004, Tamil Nadu",
-    highlights: "Semi-Furnished | 3 BHK | Traditional Style",
-    postedBy: "Priya Realty",
-    images: ["./Villa/villa6_1.png", "p1", "p2", "p3", "p4"]
-  },
-
-  // --- LEASE CATEGORY (2 Items) ---
-  {
-    id: 7,
-    tag: "LEASE",
-    status: "NEW",
-    price: "₹50.0 Lakh",
-    sqftPrice: "For 3 Years",
-    totalSqft: "2,500 sqft",
-    builtUp: "2,300 sqft (Excellent)",
-    location: "Velachery, Chennai-600042, Tamil Nadu",
-    highlights: "Unfurnished | 3 BHK | Near IT Park",
-    postedBy: "Suresh",
-    images: ["./Villa/villa7_1.png", "p1", "p2", "p3", "p4"]
-  },
-  {
-    id: 8,
-    tag: "LEASE",
-    status: "RE-SALE",
-    price: "₹35.0 Lakh",
-    sqftPrice: "For 2 Years",
-    totalSqft: "1,500 sqft",
-    builtUp: "1,400 sqft (Well Maintained)",
-    location: "Nungambakkam, Chennai-600034, Tamil Nadu",
-    highlights: "Semi-Furnished | 2 BHK | Gated Community",
-    postedBy: "Admin",
-    images: ["./Villa/villa8_1.png", "p1", "p2", "p3", "p4"]
-  },
-
-  // --- SELL CATEGORY (2 Items) ---
-  {
-    id: 9,
+    id: 3,
     tag: "SELL",
     status: "RE-SALE",
-    price: "₹2.8 Cr",
+    price: "₹2.8 Crores",
     sqftPrice: "₹5,600/sqft",
     totalSqft: "5,000 sqft",
     builtUp: "4,500 sqft (10 Years Old)",
     location: "Ekkaduthangal, Chennai-600032, Tamil Nadu",
-    highlights: "Unfurnished | 4 BHK | gym ",
+    highlights: "Unfurnished | 4 BHK | Gym | Spacious Villa",
     postedBy: "Manickam",
-    images: ["./Villa/villa9_1.png", "p1", "p2", "p3", "p4"]
+    postedAs: "Seller",
+    logo: "",
+    images: ["./Villa/villa9_1.png", "./Villa/villa9_2.png", "./Villa/villa9_3.png", "./Villa/villa9_4.png"],
+    agentDetails: "💰 Urgent sale | Price negotiable | Clear title | All legal documents ready",
+    contactEmail: "manickam@example.com",
+    contactPhone: "+91 94444 33221",
+    experience: "First time seller",
+    achievements: "Property maintained for 10 years"
   },
+  
+  // LEASE - Corporate Villa (Posted by LESSOR/OWNER)
   {
-    id: 10,
+    id: 4,
+    tag: "LEASE",
+    status: "NEW",
+    price: "₹50.0 Lakhs",
+    sqftPrice: "For 3 Years",
+    totalSqft: "2,500 sqft",
+    builtUp: "2,300 sqft (Excellent)",
+    location: "Velachery, Chennai-600042, Tamil Nadu",
+    highlights: "Unfurnished | 3 BHK | Near IT Park | Corporate Villa",
+    postedBy: "Suresh",
+    postedAs: "Lessor",
+    logo: "",
+    images: ["./Villa/villa7_1.png", "./Villa/villa7_2.png", "./Villa/villa7_3.png", "./Villa/villa7_4.png", "./Villa/villa7_5.png"],
+    agentDetails: "📄 Long-term lease available | Corporate lease preferred | Maintenance included",
+    contactEmail: "suresh.lease@example.com",
+    contactPhone: "+91 98765 12345",
+    experience: "Corporate leasing specialist",
+    achievements: "50+ corporate clients"
+  },
+  
+  // BUY - Premium Resale (Posted by REAL ESTATE AGENT)
+  {
+    id: 5,
+    tag: "BUY",
+    status: "RE-SALE",
+    price: "₹8.5 Crores",
+    sqftPrice: "₹12,000/sqft",
+    totalSqft: "7,000 sqft",
+    builtUp: "6,200 sqft (Ready to Occupy)",
+    location: "Adyar, Chennai-600020, Tamil Nadu",
+    highlights: "Semi-Furnished | 4 BHK | Private Pool | Premium Villa",
+    postedBy: "Agni Realtors",
+    postedAs: "Agent",
+    logo: "",
+    images: ["./Villa/villa2_1.png", "./Villa/villa2_2.png", "./Villa/villa2_3.png", "./Villa/villa2_4.png", "./Villa/villa2_5.png"],
+    agentDetails: "🏆 Top-rated real estate agency | 1000+ successful deals | Free consultation | RERA certified",
+    contactEmail: "contact@agnirealtors.com",
+    contactPhone: "+91 44 1234 5678",
+    experience: "15+ years in real estate",
+    achievements: "1000+ successful deals | RERA certified"
+  },
+  
+  // RENT - Budget Villa (Posted by OWNER)
+  {
+    id: 6,
+    tag: "RENT",
+    status: "NEW",
+    price: "₹45,000/month",
+    sqftPrice: "₹25/sqft",
+    totalSqft: "1,800 sqft",
+    builtUp: "1,650 sqft (Fresh Paint)",
+    location: "Anna Nagar, Chennai-600040, Tamil Nadu",
+    highlights: "Semi-Furnished | 2 BHK | Close to Metro | Budget Villa",
+    postedBy: "Rajesh V",
+    postedAs: "Owner",
+    logo: "",
+    images: ["./Villa/villa5_1.png", "./Villa/villa5_2.png", "./Villa/villa5_3.png", "./Villa/villa5_4.png", "./Villa/villa5_5.png"],
+    agentDetails: "🏠 Direct owner | No brokerage fee | Family preferred | Semi-furnished as shown",
+    contactEmail: "rajesh.v@example.com",
+    contactPhone: "+91 98888 77766",
+    experience: "Individual owner",
+    achievements: "Well-maintained property"
+  },
+  
+  // SELL - Affordable Villa (Posted by SELLER)
+  {
+    id: 7,
     tag: "SELL",
     status: "NEW",
-    price: "₹1.2 Cr",
+    price: "₹1.2 Crores",
     sqftPrice: "₹4,800/sqft",
     totalSqft: "2,500 sqft",
     builtUp: "2,200 sqft (New Construction)",
     location: "Madipakkam, Chennai-600091, Tamil Nadu",
-    highlights: "Semi-Furnished | 3 BHK | 2nd Floor",
+    highlights: "Semi-Furnished | 3 BHK | 2nd Floor | Affordable Villa",
     postedBy: "Deepak",
-    images: ["./Villa/villa10_1.png", "p1", "p2", "p3", "p4"]
+    postedAs: "Seller",
+    logo: "",
+    images: ["./Villa/villa10_1.png", "./Villa/villa10_2.png", "./Villa/villa10_3.png"],
+    agentDetails: "💰 Best price in locality | Immediate possession | Bank loan approved | Clear title deed",
+    contactEmail: "deepak.sell@example.com",
+    contactPhone: "+91 97777 66554",
+    experience: "First time seller",
+    achievements: "Brand new construction"
+  },
+  
+  // LEASE - Compact Villa (Posted by OWNER)
+  {
+    id: 8,
+    tag: "LEASE",
+    status: "RE-SALE",
+    price: "₹35.0 Lakhs",
+    sqftPrice: "For 2 Years",
+    totalSqft: "1,500 sqft",
+    builtUp: "1,400 sqft (Well Maintained)",
+    location: "Nungambakkam, Chennai-600034, Tamil Nadu",
+    highlights: "Semi-Furnished | 2 BHK | Gated Community | Compact Villa",
+    postedBy: "Redlay",
+    postedAs: "Owner",
+    logo: "",
+    images: ["./Villa/villa8_1.png", "./Villa/villa8_2.png", "./Villa/villa8_3.png", "./Villa/villa8_4.png", "./Villa/villa8_5.png"],
+    agentDetails: "🔑 Owner leasing directly | Flexible terms | Maintenance included | CCTV secured",
+    contactEmail: "redlay.lease@example.com",
+    contactPhone: "+91 96666 55443",
+    experience: "Experienced lessor",
+    achievements: "Fully secured property"
+  },
+  
+  // BUY - Modern Villa (Posted by BUILDER/DEVELOPER)
+  {
+    id: 9,
+    tag: "BUY",
+    status: "NEW",
+    price: "₹4.2 Crores",
+    sqftPrice: "₹6,000/sqft",
+    totalSqft: "7,000 sqft",
+    builtUp: "5,500 sqft (Handover in 6 months)",
+    location: "OMR, Thoraipakkam, Chennai-600097, Tamil Nadu",
+    highlights: "Unfurnished | 3 BHK | Garden Facing | Modern Villa",
+    postedBy: "Siva Kumar",
+    postedAs: "Builder",
+    logo: "",
+    images: ["./Villa/villa3_1.png", "./Villa/villa3_2.png", "./Villa/villa3_3.png", "./Villa/villa3_4.png", "./Villa/villa3_5.png"],
+    agentDetails: "🏗️ Direct from builder | No middlemen | Possession within 6 months | Premium amenities",
+    contactEmail: "siva.builders@example.com",
+    contactPhone: "+91 95555 44332",
+    experience: "20+ years in construction",
+    achievements: "50+ projects completed"
+  },
+  
+  // RENT - Heritage Villa (Posted by AGENT)
+  {
+    id: 10,
+    tag: "RENT",
+    status: "RE-SALE",
+    price: "₹85,000/month",
+    sqftPrice: "₹30/sqft",
+    totalSqft: "2,800 sqft",
+    builtUp: "2,600 sqft (Prime Condition)",
+    location: "Mylapore, Chennai-600004, Tamil Nadu",
+    highlights: "Semi-Furnished | 3 BHK | Traditional Style | Heritage Villa",
+    postedBy: "Priya Realty",
+    postedAs: "Agent",
+    logo: "",
+    images: ["./Villa/villa6_1.png", "./Villa/villa6_2.png", "./Villa/villa6_3.png", "./Villa/villa6_4.png", "./Villa/villa6_5.png"],
+    agentDetails: "🏛️ Heritage property specialist | Verified agent | Best rental deals in Mylapore",
+    contactEmail: "priya.realty@example.com",
+    contactPhone: "+91 44 9876 5432",
+    experience: "10+ years in heritage properties",
+    achievements: "Best Heritage Agent Award 2023"
   }
-
 ];
