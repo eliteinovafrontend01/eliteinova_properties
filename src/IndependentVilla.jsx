@@ -120,21 +120,81 @@ const PropertyCard = ({ property, onContactClick }) => {
     return property.agentDetails.substring(0, 40) + '...';
   };
 
+  const imageCount = property.images.length;
+  
+  // Calculate thumbnail width based on image count
+  // For 1 image: width 100px, for 2 images: 85px, for 3: 75px, for 4+: 70px
+  const getThumbnailWidth = () => {
+    if (imageCount === 1) return '100px';
+    if (imageCount === 2) return '90px';
+    if (imageCount === 3) return '82px';
+    if (imageCount >= 4) return '70px';
+    return '80px';
+  };
+  
+  // Calculate thumbnail height - evenly distributed
+  const getThumbnailHeight = () => {
+    const containerHeight = 320; // lg: 340, xl: 360 but using base
+    const padding = 16; // p-2 = 8px each side = 16px total
+    const gapTotal = (imageCount - 1) * 8; // gap-2 = 8px between items
+    const availableHeight = containerHeight - padding - gapTotal;
+    return `${availableHeight / imageCount}px`;
+  };
+
   return (
     <>
-      <div className="bg-gradient-to-br from-teal-50/90 via-emerald-50/90 to-teal-50/90 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-6 lg:p-8 border border-teal-200/30 hover:shadow-[0_0_60px_rgba(0,105,92,0.3)] transition-all duration-700 group mb-6 md:mb-8 w-full">
+      <div
+        className="
+          w-full
+          max-w-[1450px]
+          mx-auto
+          bg-gradient-to-br
+          from-teal-50/90
+          via-emerald-50/90
+          to-teal-50/90
+          backdrop-blur-xl
+          rounded-[32px]
+          shadow-2xl
+          border
+          border-teal-200/30
+          p-5
+          lg:p-6
+          xl:p-7
+          mb-8
+          overflow-hidden
+          transition-all
+          duration-500
+          group
+        "
+      >
 
-        <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+
           {/* LEFT: IMAGE SECTION */}
-          <div className="w-full lg:w-[380px] xl:w-[430px] flex flex-col sm:flex-row h-auto sm:h-[300px] md:h-[320px] lg:h-[350px] bg-gray-100 rounded-xl md:rounded-2xl overflow-hidden shadow-xl">
-            <div
-              className="w-full sm:w-[75%] relative overflow-hidden cursor-pointer h-[250px] sm:h-full"
-              onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}
-            >
+          <div
+            className="
+              w-full
+              lg:w-[420px]
+              xl:w-[460px]
+              2xl:w-[500px]
+              flex
+              flex-row
+              h-[320px]
+              lg:h-[340px]
+              xl:h-[360px]
+              bg-gray-100
+              rounded-[24px]
+              overflow-hidden
+              shadow-xl
+              flex-shrink-0
+            "
+          >
+            {/* Main Image Area */}
+            <div className="flex-1 h-full overflow-hidden relative" onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}>
               <img
                 src={property.images[activeImg]}
+                alt={property.title || 'Villa'}
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                alt="Villa"
                 onError={(e) => {
                   e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop';
                 }}
@@ -150,15 +210,25 @@ const PropertyCard = ({ property, onContactClick }) => {
               </div>
             </div>
 
-            <div className="flex sm:flex-row lg:flex-col w-full sm:w-[25%] gap-1 p-1 bg-white overflow-x-auto sm:overflow-y-auto">
+            {/* Thumbnail Strip - Perfectly fits ANY number of images (1,2,3,4,5+) with NO empty space */}
+            <div 
+              className="h-full overflow-y-auto p-2 bg-white flex flex-col gap-2 flex-shrink-0"
+              style={{ 
+                width: getThumbnailWidth(),
+              }}
+            >
               {property.images.map((img, idx) => (
                 <div
                   key={idx}
-                  className={`relative overflow-hidden rounded-lg cursor-pointer transition-all duration-300 ${
+                  className={`relative overflow-hidden rounded-lg cursor-pointer transition-all duration-300 flex-shrink-0 w-full ${
                     activeImg === idx
-                      ? 'ring-2 ring-[#26A69A] shadow-md scale-[0.98]'
-                      : 'hover:shadow-md hover:scale-[0.98]'
-                  } w-20 h-20 sm:w-auto sm:flex-1 sm:min-h-[70px]`}
+                      ? 'ring-2 ring-[#26A69A] shadow-md'
+                      : 'hover:shadow-md'
+                  }`}
+                  style={{ 
+                    height: `calc((100% - ${(imageCount - 1) * 8}px) / ${imageCount})`,
+                    minHeight: '40px'
+                  }}
                   onClick={() => setActiveImg(idx)}
                   onDoubleClick={(e) => handleImageDoubleClick(idx, e)}
                 >
@@ -170,15 +240,21 @@ const PropertyCard = ({ property, onContactClick }) => {
                       e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop';
                     }}
                   />
+                  {/* Optional: Show image counter badge for many images */}
+                  {imageCount > 6 && idx === 2 && (
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm">
+                      +{imageCount - 2}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
 
           {/* RIGHT: CONTENT SECTION */}
-          <div className="flex-1 p-3 md:p-4 flex flex-col justify-between text-left">
+          <div className="flex-1 min-w-0 p-3 md:p-4 flex flex-col justify-between text-left">
 
-            <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+            <div className="flex justify-between items-start gap-4 w-full">
               <div className="w-full sm:w-auto">
                 <h2 className="font-black text-slate-900 tracking-tighter mb-2 break-words flex flex-wrap items-baseline gap-x-1.5 md:gap-x-2">
                   <span className="text-2xl md:text-3xl lg:text-4xl leading-none">
@@ -220,7 +296,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                   transition: 'all 0.5s ease-in-out'
                 }}>
                   <div
-                    className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] md:text-xs font-black tracking-wider uppercase flex items-center justify-center gap-1.5"
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-[10px] md:text-xs font-black tracking-wider uppercase flex items-center justify-center gap-1.5 whitespace-nowrap"
                     style={{
                       clipPath: 'polygon(0% 0%, 100% 0%, 92% 50%, 100% 100%, 0% 100%, 8% 50%)',
                       padding: '8px 24px', 
@@ -590,12 +666,12 @@ const IndependentVilla = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-teal-50/30 py-6 md:py-12 px-3 md:px-4 lg:px-6">
+    <div className="w-full px-4 md:px-6 lg:px-8 py-6 min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-teal-50/30">
       <div className="max-w-none mx-auto">
-        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10">
+        <div className="flex flex-col gap-0">
           
           {/* LEFT COLUMN - CARDS SECTION */}
-          <div className="w-full lg:w-[70%] xl:w-[72%]">
+          <div className="w-full">
             <div className="flex flex-col">
               {VillaData.map((item) => (
                 <PropertyCard key={item.id} property={item} onContactClick={() => handleContactClick(item)} />
