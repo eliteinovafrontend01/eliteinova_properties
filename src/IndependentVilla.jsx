@@ -79,15 +79,6 @@ const PropertyCard = ({ property, onContactClick }) => {
   };
 
   const statusStyle = getStatusStyle(property.status);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 500);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   const { num: priceNum, unit: priceUnit } = splitPrice(property.price);
   const bhk = extractBHK(property.highlights);
@@ -124,186 +115,196 @@ const PropertyCard = ({ property, onContactClick }) => {
 
   return (
     <>
-      {/* MAIN CARD - OPTIMAL READABLE SIZE */}
-      <div 
-        className="w-full bg-gradient-to-br from-teal-50/90 via-emerald-50/90 to-teal-50/90 rounded-xl shadow-lg border border-teal-200/30 p-4 mb-4 overflow-hidden transition-all duration-500 group"
-      >
-        {/* FLEX ROW */}
-        <div className="flex flex-col lg:flex-row gap-4">
+      <div className="w-full bg-white rounded-2xl shadow-2xl border border-teal-100 overflow-hidden transition-all duration-300 hover:shadow-3xl mb-6">
+        
+        <div className="p-4 md:p-5">
           
-          {/* IMAGE SECTION - OPTIMAL SIZE */}
-          <div className="w-full lg:w-[35%] xl:w-[32%]">
-            <div className="flex flex-row bg-gray-100 rounded-lg overflow-hidden shadow-md" style={{ height: '200px' }}>
-              
-              {/* MAIN IMAGE */}
-              <div className="flex-1 h-full overflow-hidden relative cursor-pointer" onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}>
-                <img
-                  src={property.images[activeImg]}
-                  alt="Villa"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop';
-                  }}
-                />
-                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  Double click
-                </div>
-                <div className="absolute top-2 left-2 z-10">
-                  <div className={`${statusStyle.bg} text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-md flex items-center gap-1 ${statusStyle.animation}`}>
-                    <span className="text-[10px]">{statusStyle.icon}</span>
-                    <span className="uppercase tracking-wider text-[9px]">{property.status}</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* THUMBNAILS */}
-              <div 
-                className="h-full overflow-y-auto bg-white flex flex-col gap-1 p-1"
-                style={{ width: imageCount <= 2 ? '70px' : imageCount <= 3 ? '75px' : imageCount <= 4 ? '80px' : '85px' }}
-              >
-                {property.images.map((img, idx) => {
-                  const gapTotal = (imageCount - 1) * 4;
-                  const itemHeight = `calc((100% - ${gapTotal}px) / ${imageCount})`;
-                  
-                  return (
-                    <div
-                      key={idx}
-                      className={`relative overflow-hidden rounded cursor-pointer transition-all duration-200 flex-shrink-0 ${
-                        activeImg === idx ? 'ring-2 ring-[#26A69A] shadow-sm' : 'hover:shadow-sm'
-                      }`}
-                      style={{ height: itemHeight, minHeight: '40px' }}
-                      onClick={() => setActiveImg(idx)}
-                      onDoubleClick={(e) => handleImageDoubleClick(idx, e)}
-                    >
-                      <img
-                        src={img}
-                        className="w-full h-full object-cover"
-                        alt="thumb"
-                        onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop';
-                        }}
-                      />
-                      {imageCount > 5 && idx === 2 && (
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-[10px]">
-                          +{imageCount - 2}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* CONTENT SECTION - READABLE TEXT SIZES */}
-          <div className="flex-1 flex flex-col gap-2">
+          <div className="flex flex-col lg:flex-row gap-5">
             
-            {/* PRICE AND HEADER */}
-            <div className="flex flex-wrap justify-between items-start gap-2">
-              <div className="flex-1">
-                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-                  <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceNum}</span>
-                  {priceUnit && <span className="font-bold text-slate-600 text-sm md:text-base">{priceUnit}</span>}
-                  {bhk && <span className="font-black text-[#00695C] text-xl md:text-2xl">({bhk})</span>}
+            {/* IMAGE SECTION */}
+            <div className="w-full lg:w-[35%] xl:w-[32%]">
+              <div className="flex flex-row bg-gray-100 rounded-xl overflow-hidden shadow-lg" style={{ height: '220px' }}>
+                
+                <div className="flex-1 h-full overflow-hidden relative cursor-pointer" onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}>
+                  <img
+                    src={property.images[activeImg]}
+                    alt="Villa"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop';
+                    }}
+                  />
+                  <div className="absolute bottom-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    Double click
+                  </div>
+                  <div className="absolute top-2 left-2 z-10">
+                    <div className={`${statusStyle.bg} text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-lg flex items-center gap-1 ${statusStyle.animation}`}>
+                      <span className="text-[10px]">{statusStyle.icon}</span>
+                      <span className="uppercase tracking-wider text-[9px]">{property.status}</span>
+                    </div>
+                  </div>
                 </div>
                 
-                {/* ALL THREE IN ONE LINE */}
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                  <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm">{property.sqftPrice}</span>
-                  <span className="text-slate-600 font-bold flex items-center gap-1 text-xs md:text-sm">📐 {property.totalSqft}</span>
-                  <span className="text-slate-500 bg-gray-100 px-2 py-1 rounded-md text-xs md:text-sm">🏗️ {property.builtUp}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-col items-end gap-1 shrink-0">
-                <div className="flex items-center gap-1 font-bold text-slate-500 uppercase tracking-wide text-[9px] md:text-[10px]">
-                  <span className="w-3 h-px bg-slate-300"></span>
-                  <span>{PAGE_NAME}</span>
-                </div>
                 <div 
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black tracking-wider uppercase flex items-center justify-center gap-1 whitespace-nowrap text-[10px] md:text-xs"
-                  style={{
-                    clipPath: 'polygon(0% 0%, 100% 0%, 92% 50%, 100% 100%, 0% 100%, 8% 50%)',
-                    padding: '4px 16px',
-                    minWidth: '80px'
-                  }}
+                  className="h-full overflow-y-auto bg-white flex flex-col gap-1 p-1"
+                  style={{ width: imageCount <= 2 ? '70px' : imageCount <= 3 ? '75px' : imageCount <= 4 ? '80px' : '85px' }}
                 >
-                  <span className="text-xs md:text-sm">
-                    {property.tag === 'BUY' && '💰'}
-                    {property.tag === 'RENT' && '🔑'}
-                    {property.tag === 'LEASE' && '📄'}
-                    {property.tag === 'SELL' && '🏷️'}
-                  </span>
-                  <span>{property.tag}</span>
+                  {property.images.map((img, idx) => {
+                    const gapTotal = (imageCount - 1) * 4;
+                    const itemHeight = `calc((100% - ${gapTotal}px) / ${imageCount})`;
+                    
+                    return (
+                      <div
+                        key={idx}
+                        className={`relative overflow-hidden rounded cursor-pointer transition-all duration-200 flex-shrink-0 ${
+                          activeImg === idx ? 'ring-2 ring-[#26A69A] shadow-md' : 'hover:shadow-md'
+                        }`}
+                        style={{ height: itemHeight, minHeight: '40px' }}
+                        onClick={() => setActiveImg(idx)}
+                        onDoubleClick={(e) => handleImageDoubleClick(idx, e)}
+                      >
+                        <img
+                          src={img}
+                          className="w-full h-full object-cover"
+                          alt="thumb"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop';
+                          }}
+                        />
+                        {imageCount > 5 && idx === 2 && (
+                          <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-[10px]">
+                            +{imageCount - 2}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            {/* LOCATION */}
-            <div className="flex items-start gap-2">
-              <div className="bg-teal-100 p-1.5 rounded-lg text-[#00695C] shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-              <p className="text-slate-800 font-bold text-sm md:text-base leading-tight">{property.location}</p>
-            </div>
-
-            {/* HIGHLIGHTS */}
-            <div>
-              <p className="font-black text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-2 text-[9px] md:text-[10px]">
-                <span className="w-5 h-px bg-[#26A69A]"></span>
-                Property Highlights
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {property.highlights.split('|').map((h, i) => (
-                  <div key={i} className="flex items-center gap-1 bg-white/70 text-slate-700 px-2 py-1 rounded-lg border border-teal-100 font-medium text-[10px] md:text-xs">
-                    <span className="w-1 h-1 rounded-full bg-[#26A69A] shrink-0"></span>
-                    <span>{h.trim()}</span>
+            {/* CONTENT SECTION */}
+            <div className="flex-1 flex flex-col gap-2">
+              
+              {/* PRICE AND HEADER */}
+              <div className="flex flex-wrap justify-between items-start gap-2">
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
+                    <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceNum}</span>
+                    {priceUnit && <span className="font-bold text-slate-600 text-sm md:text-base">{priceUnit}</span>}
+                    {bhk && <span className="font-black text-[#00695C] text-xl md:text-2xl">({bhk})</span>}
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* POSTED BY SECTION */}
-            <div className="pt-2 border-t border-teal-100">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+                  
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                    <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">{property.sqftPrice}</span>
+                    <span className="text-slate-600 font-bold flex items-center gap-1 text-xs md:text-sm">📐 {property.totalSqft}</span>
+                    <span className="text-slate-500 bg-gray-100 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">🏗️ {property.builtUp}</span>
+                  </div>
+                </div>
                 
-                <div className="flex items-center gap-3 flex-1 min-w-[180px]">
-                  <div className="rounded-xl bg-gradient-to-br from-[#00695C] to-[#26A69A] flex items-center justify-center text-white font-black shadow-md overflow-hidden shrink-0 w-10 h-10 md:w-12 md:h-12 text-base md:text-lg">
-                    {property.logo && !logoError ? (
-                      <img src={property.logo} alt="logo" className="w-full h-full object-cover" onError={() => setLogoError(true)} />
-                    ) : (
-                      <span>{property.postedBy.charAt(0)}</span>
-                    )}
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <div className="flex items-center gap-1 font-bold text-slate-500 uppercase tracking-wide text-[9px] md:text-[10px]">
+                    <span className="w-3 h-px bg-slate-300"></span>
+                    <span>{PAGE_NAME}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[#00695C] font-bold uppercase tracking-wider text-[8px] md:text-[9px]">{getListedByText()}</p>
-                    <div className="flex flex-wrap items-baseline gap-x-2">
-                      <p className="font-black text-slate-800 break-words text-sm md:text-base">{property.postedBy}</p>
-                      {property.agentDetails && (
-                        <span className="text-gray-600 truncate max-w-[100px] text-[9px] md:text-[10px]">({getShortDetails()})</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                      <span className="text-teal-600 font-medium text-[9px] md:text-[10px]">{getRoleTitle()}</span>
-                      {property.agentDetails && (
-                        <button onClick={() => setShowAgentModal(true)} className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.5 text-[9px] md:text-[10px]">
-                          📖 View Details →
-                        </button>
-                      )}
-                    </div>
+                  
+                  <div 
+                    className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black tracking-wider uppercase flex items-center justify-center gap-1 whitespace-nowrap text-[10px] md:text-xs"
+                    style={{
+                      clipPath: 'polygon(0% 0%, 100% 0%, 92% 50%, 100% 100%, 0% 100%, 8% 50%)',
+                      padding: '4px 16px',
+                      minWidth: '80px',
+                      boxShadow: '0 0 15px rgba(0,105,92,0.5)',
+                    }}
+                  >
+                    <span className="text-xs md:text-sm">
+                      {property.tag === 'BUY' && '💰'}
+                      {property.tag === 'SELL' && '🏷️'}
+                      {property.tag === 'RENT' && '🔑'}
+                      {property.tag === 'LEASE' && '📄'}
+                    </span>
+                    <span>{property.tag}</span>
                   </div>
                 </div>
+              </div>
 
-                <button
-                  onClick={onContactClick}
-                  className="bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white font-bold rounded-lg flex items-center gap-1 whitespace-nowrap shadow-md hover:shadow-lg transition-all shrink-0 px-4 md:px-5 py-1.5 md:py-2 text-xs md:text-sm"
-                >
-                  <span className="text-xs md:text-sm">📞</span>
-                  Contact
-                </button>
+              {/* LOCATION */}
+              <div className="flex items-start gap-2">
+                <div className="bg-teal-100 p-1.5 rounded-lg text-[#00695C] shrink-0 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <p className="text-slate-800 font-bold text-sm md:text-base leading-tight">{property.location}</p>
+              </div>
+
+              {/* HIGHLIGHTS */}
+              <div>
+                <p className="font-black text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-2 text-[9px] md:text-[10px]">
+                  <span className="w-5 h-px bg-[#26A69A]"></span>
+                  Property Highlights
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {property.highlights.split('|').map((h, i) => (
+                    <div key={i} className="flex items-center gap-1 bg-gray-50 text-slate-700 px-2 py-1 rounded-lg border border-gray-200 font-medium text-[10px] md:text-xs shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-[#26A69A] shrink-0"></span>
+                      <span>{h.trim()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* POSTED BY SECTION */}
+              <div className="pt-2 border-t border-gray-100">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  
+                  <div className="flex items-center gap-3 flex-1 min-w-[180px]">
+                    <div className="rounded-xl bg-gradient-to-br from-[#00695C] to-[#26A69A] flex items-center justify-center text-white font-black shadow-lg overflow-hidden shrink-0 w-10 h-10 md:w-12 md:h-12 text-base md:text-lg">
+                      {property.logo && !logoError ? (
+                        <img src={property.logo} alt="logo" className="w-full h-full object-cover" onError={() => setLogoError(true)} />
+                      ) : (
+                        <span>{property.postedBy.charAt(0)}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[#00695C] font-bold uppercase tracking-wider text-[8px] md:text-[9px]">{getListedByText()}</p>
+                      <div className="flex flex-wrap items-baseline gap-x-2">
+                        <p className="font-black text-slate-800 break-words text-sm md:text-base">{property.postedBy}</p>
+                        {property.agentDetails && (
+                          <span className="text-gray-600 truncate max-w-[100px] text-[9px] md:text-[10px]">({getShortDetails()})</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                        <span className="text-teal-600 font-medium text-[9px] md:text-[10px]">{getRoleTitle()}</span>
+                        {property.agentDetails && (
+                          <button onClick={() => setShowAgentModal(true)} className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.5 text-[9px] md:text-[10px]">
+                            📖 View Details →
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={onContactClick}
+                    className="bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white font-bold rounded-lg flex items-center gap-1 whitespace-nowrap transition-all duration-300 shrink-0 px-4 md:px-5 py-1.5 md:py-2 text-xs md:text-sm"
+                    style={{
+                      boxShadow: '0 8px 20px rgba(0,105,92,0.3)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 12px 25px rgba(0,105,92,0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,105,92,0.3)';
+                    }}
+                  >
+                    <span className="text-xs md:text-sm">📞</span>
+                    Contact
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -354,8 +355,6 @@ const PropertyCard = ({ property, onContactClick }) => {
                   <p className="text-sm"><strong>Listed Price:</strong> {property.price} {bhk && `(${bhk})`}</p>
                   <p className="text-sm"><strong>{property.sqftPrice}</strong> • 📐 {property.totalSqft} • 🏗️ {property.builtUp}</p>
                   <p className="text-sm"><strong>📍 Location:</strong> {property.location}</p>
-                  <p className="text-sm"><strong>🏷️ Status:</strong> <span className={`px-2 py-0.5 rounded-full text-white text-xs ${property.status === 'NEW' ? 'bg-green-500' : property.status === 'RE-SALE' ? 'bg-purple-500' : 'bg-gray-500'}`}>{property.status}</span></p>
-                  <p className="text-sm"><strong>📌 Listing Type:</strong> {property.tag}</p>
                 </div>
               </div>
               <div className="mb-4">
@@ -366,7 +365,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                 <div className="bg-teal-50/50 rounded-xl p-4">
                   <div className="flex flex-wrap gap-2">
                     {property.highlights.split('|').map((h, i) => (
-                      <span key={i} className="bg-white px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 border border-teal-100">✨ {h.trim()}</span>
+                      <span key={i} className="bg-white px-3 py-1.5 rounded-lg text-xs font-medium text-slate-700 border border-teal-100 shadow-sm">✨ {h.trim()}</span>
                     ))}
                   </div>
                 </div>
@@ -403,27 +402,9 @@ const PropertyCard = ({ property, onContactClick }) => {
                   </div>
                 </div>
               )}
-              <div className="mb-4">
-                <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
-                  <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
-                  Gallery ({property.images.length} Photos)
-                </h4>
-                <div className="flex gap-2 overflow-x-auto pb-2">
-                  {property.images.slice(0, 6).map((img, idx) => (
-                    <div key={idx} className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-teal-200">
-                      <img src={img} alt={`gallery-${idx}`} className="w-full h-full object-cover" />
-                    </div>
-                  ))}
-                  {property.images.length > 6 && (
-                    <div className="w-16 h-16 rounded-lg bg-teal-100 flex items-center justify-center text-teal-600 font-bold text-sm flex-shrink-0">
-                      +{property.images.length - 6}
-                    </div>
-                  )}
-                </div>
-              </div>
               <div className="flex gap-3 mt-5 pt-4 border-t border-teal-100">
-                <button onClick={() => { setShowAgentModal(false); onContactClick(); }} className="flex-1 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-105">📞 Contact Now</button>
-                <button onClick={() => setShowAgentModal(false)} className="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-bold text-sm transition-all hover:bg-gray-200">Close</button>
+                <button onClick={() => { setShowAgentModal(false); onContactClick(); }} className="flex-1 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-105 shadow-lg">📞 Contact Now</button>
+                <button onClick={() => setShowAgentModal(false)} className="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-bold text-sm transition-all hover:bg-gray-200 shadow-sm">Close</button>
               </div>
             </div>
           </div>
@@ -445,14 +426,14 @@ const PropertyCard = ({ property, onContactClick }) => {
               <div className="relative rounded-xl overflow-hidden shadow-2xl bg-black/50">
                 <img src={property.images[galleryActiveImg]} alt="Gallery main" className="w-full h-auto max-h-[50vh] md:max-h-[60vh] object-contain" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop'; }} />
               </div>
-              <button onClick={prevGalleryImg} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-10 md:h-10 rounded-full transition-all text-sm md:text-xl flex items-center justify-center backdrop-blur hover:scale-110">❮</button>
-              <button onClick={nextGalleryImg} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-10 md:h-10 rounded-full transition-all text-sm md:text-xl flex items-center justify-center backdrop-blur hover:scale-110">❯</button>
+              <button onClick={prevGalleryImg} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-10 md:h-10 rounded-full transition-all text-sm md:text-xl flex items-center justify-center backdrop-blur hover:scale-110 shadow-lg">❮</button>
+              <button onClick={nextGalleryImg} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-10 md:h-10 rounded-full transition-all text-sm md:text-xl flex items-center justify-center backdrop-blur hover:scale-110 shadow-lg">❯</button>
             </div>
             <div className="mt-2 text-white/80 text-xs md:text-sm">{galleryActiveImg + 1} / {property.images.length}</div>
             <div className="w-full max-w-5xl mt-4 md:mt-6 px-2">
               <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 justify-center flex-wrap">
                 {property.images.map((img, idx) => (
-                  <div key={idx} className={`w-12 h-12 md:w-16 md:h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all ${galleryActiveImg === idx ? 'ring-2 ring-[#26A69A] shadow-xl scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105'}`} onClick={() => handleGalleryThumbnailClick(idx)}>
+                  <div key={idx} className={`w-12 h-12 md:w-16 md:h-16 flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all ${galleryActiveImg === idx ? 'ring-2 ring-[#26A69A] shadow-xl scale-105' : 'opacity-70 hover:opacity-100 hover:scale-105 shadow-md'}`} onClick={() => handleGalleryThumbnailClick(idx)}>
                     <img src={img} alt="thumb" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop'; }} />
                   </div>
                 ))}
@@ -478,13 +459,13 @@ const PropertyCard = ({ property, onContactClick }) => {
               <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black/50">
                 <img src={property.images[activeImg]} alt="Gallery" className="w-full h-auto max-h-[50vh] md:max-h-[65vh] object-contain" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=600&fit=crop'; }} />
               </div>
-              <button onClick={prevImg} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-12 md:h-12 rounded-full transition-all text-sm md:text-2xl flex items-center justify-center backdrop-blur hover:scale-110">❮</button>
-              <button onClick={nextImg} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-12 md:h-12 rounded-full transition-all text-sm md:text-2xl flex items-center justify-center backdrop-blur hover:scale-110">❯</button>
-              <div className="absolute -bottom-8 md:-bottom-12 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-lg text-white text-[10px] md:text-sm px-2 md:px-4 py-1 rounded-full">{activeImg + 1} / {property.images.length}</div>
+              <button onClick={prevImg} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-12 md:h-12 rounded-full transition-all text-sm md:text-2xl flex items-center justify-center backdrop-blur hover:scale-110 shadow-lg">❮</button>
+              <button onClick={nextImg} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white/20 hover:bg-white/40 text-white w-8 h-8 md:w-12 md:h-12 rounded-full transition-all text-sm md:text-2xl flex items-center justify-center backdrop-blur hover:scale-110 shadow-lg">❯</button>
+              <div className="absolute -bottom-8 md:-bottom-12 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-lg text-white text-[10px] md:text-sm px-2 md:px-4 py-1 rounded-full shadow-lg">{activeImg + 1} / {property.images.length}</div>
             </div>
             <div className="flex gap-2 md:gap-3 mt-6 md:mt-12 overflow-x-auto pb-2 justify-center flex-wrap max-w-full">
               {property.images.map((img, idx) => (
-                <div key={idx} className={`w-12 h-12 md:w-20 md:h-20 flex-shrink-0 rounded-lg md:rounded-xl overflow-hidden cursor-pointer transition-all ${activeImg === idx ? 'ring-2 ring-[#26A69A] shadow-xl scale-105' : 'opacity-60 hover:opacity-100 hover:scale-105'}`} onClick={() => setActiveImg(idx)}>
+                <div key={idx} className={`w-12 h-12 md:w-20 md:h-20 flex-shrink-0 rounded-lg md:rounded-xl overflow-hidden cursor-pointer transition-all ${activeImg === idx ? 'ring-2 ring-[#26A69A] shadow-xl scale-105' : 'opacity-60 hover:opacity-100 hover:scale-105 shadow-md'}`} onClick={() => setActiveImg(idx)}>
                   <img src={img} alt="thumb" className="w-full h-full object-cover" onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop'; }} />
                 </div>
               ))}
@@ -496,142 +477,11 @@ const PropertyCard = ({ property, onContactClick }) => {
   );
 };
 
-// FILTER SECTION
-const FilterSection = ({ filters, onFilterChange, onReset, totalCount, filteredCount }) => {
-  const [priceRange, setPriceRange] = useState([0, 500]);
-  const [selectedBHK, setSelectedBHK] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [selectedTag, setSelectedTag] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handlePriceChange = (e) => {
-    const value = parseInt(e.target.value);
-    setPriceRange([0, value]);
-    onFilterChange({ priceMax: value, bhk: selectedBHK, status: selectedStatus, tag: selectedTag, search: searchTerm });
-  };
-
-  const handleBHKChange = (bhk) => {
-    setSelectedBHK(bhk);
-    onFilterChange({ priceMax: priceRange[1], bhk, status: selectedStatus, tag: selectedTag, search: searchTerm });
-  };
-
-  const handleStatusChange = (status) => {
-    setSelectedStatus(status);
-    onFilterChange({ priceMax: priceRange[1], bhk: selectedBHK, status, tag: selectedTag, search: searchTerm });
-  };
-
-  const handleTagChange = (tag) => {
-    setSelectedTag(tag);
-    onFilterChange({ priceMax: priceRange[1], bhk: selectedBHK, status: selectedStatus, tag, search: searchTerm });
-  };
-
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    onFilterChange({ priceMax: priceRange[1], bhk: selectedBHK, status: selectedStatus, tag: selectedTag, search: value });
-  };
-
-  const handleReset = () => {
-    setPriceRange([0, 500]);
-    setSelectedBHK('all');
-    setSelectedStatus('all');
-    setSelectedTag('all');
-    setSearchTerm('');
-    onReset();
-  };
-
-  return (
-    <div className="w-full bg-gradient-to-br from-white/95 to-teal-50/80 backdrop-blur-xl rounded-xl shadow-lg border border-teal-200/30 p-4 sticky top-4 transition-all duration-300">
-      
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-teal-200">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#00695C] to-[#26A69A] flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-          </div>
-          <h3 className="font-black text-slate-800 text-sm md:text-base">Filter Properties</h3>
-        </div>
-        <button onClick={handleReset} className="text-teal-600 hover:text-teal-800 font-medium underline text-[10px] md:text-xs">Reset All</button>
-      </div>
-
-      {/* Search */}
-      <div className="mb-3">
-        <label className="font-bold text-slate-600 uppercase tracking-wider mb-1 block text-[9px] md:text-[10px]">🔍 Search Location</label>
-        <input type="text" placeholder="Enter location / city..." value={searchTerm} onChange={handleSearchChange} className="w-full px-3 py-2 rounded-xl border border-teal-200 focus:border-[#26A69A] focus:ring-2 focus:ring-[#26A69A]/20 outline-none transition-all bg-white/70 text-xs md:text-sm" />
-      </div>
-
-      {/* Price */}
-      <div className="mb-3">
-        <label className="font-bold text-slate-600 uppercase tracking-wider mb-1 block text-[9px] md:text-[10px]">💰 Max Price (₹ Lakhs)</label>
-        <input type="range" min="0" max="500" value={priceRange[1]} onChange={handlePriceChange} className="w-full h-1.5 bg-teal-100 rounded-lg appearance-none cursor-pointer accent-[#00695C]" />
-        <div className="flex justify-between mt-1">
-          <span className="text-[9px] md:text-[10px] text-slate-500">₹0 L</span>
-          <span className="text-[9px] md:text-[10px] font-bold text-[#00695C]">₹{priceRange[1]} Lakhs</span>
-          <span className="text-[9px] md:text-[10px] text-slate-500">₹500+ L</span>
-        </div>
-      </div>
-
-      {/* BHK */}
-      <div className="mb-3">
-        <label className="font-bold text-slate-600 uppercase tracking-wider mb-1 block text-[9px] md:text-[10px]">🏠 BHK Type</label>
-        <div className="flex flex-wrap gap-1.5">
-          {['all', '2 BHK', '3 BHK', '4 BHK', '5 BHK'].map((bhk) => (
-            <button key={bhk} onClick={() => handleBHKChange(bhk)} className={`px-3 py-1 rounded-lg font-bold transition-all duration-200 text-[10px] md:text-xs ${selectedBHK === bhk ? 'bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white shadow-md' : 'bg-white/70 text-slate-600 hover:bg-teal-50 border border-teal-200'}`}>
-              {bhk === 'all' ? 'All BHK' : bhk}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Status */}
-      <div className="mb-3">
-        <label className="font-bold text-slate-600 uppercase tracking-wider mb-1 block text-[9px] md:text-[10px]">🏷️ Property Status</label>
-        <div className="flex flex-wrap gap-1.5">
-          {['all', 'NEW', 'RE-SALE', 'READY TO MOVE'].map((status) => (
-            <button key={status} onClick={() => handleStatusChange(status)} className={`px-3 py-1 rounded-lg font-bold transition-all duration-200 text-[10px] md:text-xs ${selectedStatus === status ? 'bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white shadow-md' : 'bg-white/70 text-slate-600 hover:bg-teal-50 border border-teal-200'}`}>
-              {status === 'all' ? 'All Status' : status === 'READY TO MOVE' ? 'Ready' : status}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Tag */}
-      <div className="mb-3">
-        <label className="font-bold text-slate-600 uppercase tracking-wider mb-1 block text-[9px] md:text-[10px]">📌 Listing Type</label>
-        <div className="flex flex-wrap gap-1.5">
-          {['all', 'BUY', 'SELL', 'RENT', 'LEASE'].map((tag) => (
-            <button key={tag} onClick={() => handleTagChange(tag)} className={`px-3 py-1 rounded-lg font-bold transition-all duration-200 text-[10px] md:text-xs ${selectedTag === tag ? 'bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white shadow-md' : 'bg-white/70 text-slate-600 hover:bg-teal-50 border border-teal-200'}`}>
-              {tag === 'all' ? 'All Types' : tag}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Results */}
-      <div className="mt-4 pt-3 border-t border-teal-200">
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] md:text-[10px] text-slate-500">Showing Properties</span>
-          <span className="text-sm md:text-base font-black text-[#00695C]">{filteredCount} / {totalCount}</span>
-        </div>
-        <div className="w-full bg-teal-100 rounded-full h-1.5 mt-2">
-          <div className="bg-gradient-to-r from-[#00695C] to-[#26A69A] h-1.5 rounded-full transition-all duration-300" style={{ width: `${(filteredCount / totalCount) * 100}%` }}></div>
-        </div>
-      </div>
-
-      <div className="mt-3 text-center">
-        <p className="text-[8px] md:text-[9px] text-slate-400">🏡 Find your dream villa</p>
-      </div>
-    </div>
-  );
-};
-
 const IndependentVilla = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showContactInfo, setShowContactInfo] = useState(false);
   const [filteredProperties, setFilteredProperties] = useState(VillaData);
-  const [filters, setFilters] = useState({ priceMax: 500, bhk: 'all', status: 'all', tag: 'all', search: '' });
 
   const handleContactClick = (property) => {
     setSelectedProperty(property);
@@ -644,85 +494,36 @@ const IndependentVilla = () => {
     setTimeout(() => setShowContactInfo(false), 5000);
   };
 
-  const extractBHKNumber = (highlights) => {
-    const match = highlights?.match(/(\d+)\s*\+?\s*BHK/i);
-    return match ? parseInt(match[1]) : null;
-  };
-
-  const extractPriceNumber = (priceStr) => {
-    const match = priceStr?.match(/₹([\d.,]+)/);
-    if (match) return parseFloat(match[1].replace(/,/g, ''));
-    return Infinity;
-  };
-
-  const applyFilters = () => {
-    let filtered = [...VillaData];
-    if (filters.search) filtered = filtered.filter(p => p.location.toLowerCase().includes(filters.search.toLowerCase()));
-    if (filters.bhk !== 'all') filtered = filtered.filter(p => extractBHKNumber(p.highlights) === parseInt(filters.bhk));
-    if (filters.status !== 'all') filtered = filtered.filter(p => p.status === filters.status);
-    if (filters.tag !== 'all') filtered = filtered.filter(p => p.tag === filters.tag);
-    filtered = filtered.filter(p => extractPriceNumber(p.price) <= filters.priceMax);
-    setFilteredProperties(filtered);
-  };
-
-  useEffect(() => { applyFilters(); }, [filters]);
-
-  const handleFilterChange = (newFilters) => { setFilters(prev => ({ ...prev, ...newFilters })); };
-  const handleResetFilters = () => { setFilters({ priceMax: 500, bhk: 'all', status: 'all', tag: 'all', search: '' }); };
-
   return (
-    <div style={{ 
-      width: '100%',
-      maxWidth: '1600px',
-      margin: '0 auto',
-      minHeight: '100vh',
-      padding: '12px',
-      background: 'linear-gradient(135deg, #f8fafc, #f1f5f9, #f0fdfa)'
-    }}>
-      
-      <div className="flex flex-col lg:flex-row gap-4">
-        
-        {/* LEFT COLUMN - CARDS */}
-        <div className="w-full lg:w-[68%] xl:w-[70%]">
-          <div className="flex flex-col gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-teal-100/50 p-4 md:p-6">
+      <div className="max-w-[1600px] mx-auto">
+        <div className="w-full">
+          <div className="flex flex-col gap-5">
             {filteredProperties.length > 0 ? (
               filteredProperties.map((item) => (
                 <PropertyCard key={item.id} property={item} onContactClick={() => handleContactClick(item)} />
               ))
             ) : (
-              <div className="w-full bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-md">
+              <div className="w-full bg-white rounded-2xl shadow-2xl border border-teal-100 p-8 text-center">
                 <div className="text-5xl mb-3">🔍</div>
                 <h3 className="text-lg font-bold text-slate-800 mb-1">No Properties Found</h3>
-                <p className="text-xs text-slate-500">Try adjusting your filters to find more properties.</p>
-                <button onClick={handleResetFilters} className="mt-3 px-5 py-1.5 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white rounded-lg font-bold text-xs hover:shadow-md transition-all">Reset Filters</button>
+                <p className="text-xs text-slate-500">No villas available at the moment.</p>
               </div>
             )}
           </div>
         </div>
-
-        {/* RIGHT COLUMN - FILTER */}
-        <div className="w-full lg:w-[32%] xl:w-[30%]">
-          <FilterSection 
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onReset={handleResetFilters}
-            totalCount={VillaData.length}
-            filteredCount={filteredProperties.length}
-          />
-        </div>
-
       </div>
 
       {/* LOGIN MODAL */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[200] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[200] flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl">
-            <div className="w-14 h-14 bg-gradient-to-br from-[#00695C] to-[#26A69A] rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
+            <div className="w-14 h-14 bg-gradient-to-br from-[#00695C] to-[#26A69A] rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
               <span className="text-xl text-white">🔒</span>
             </div>
             <h3 className="text-lg font-bold text-slate-800 text-center mb-1">Unlock Contact</h3>
             <p className="text-gray-500 text-xs text-center mb-4">Login to view contact details</p>
-            <button onClick={handleLogin} className="w-full bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white py-2 rounded-lg font-bold text-sm shadow-md hover:shadow-lg transition">Continue to Login</button>
+            <button onClick={handleLogin} className="w-full bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white py-2 rounded-lg font-bold text-sm shadow-lg hover:shadow-xl transition">Continue to Login</button>
             <button onClick={() => setShowLoginModal(false)} className="w-full mt-2 text-gray-500 text-xs py-1.5">Cancel</button>
           </div>
         </div>
@@ -730,7 +531,7 @@ const IndependentVilla = () => {
 
       {/* CONTACT TOAST */}
       {showContactInfo && selectedProperty && (
-        <div className="fixed bottom-4 right-4 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white rounded-xl shadow-lg p-2.5 z-[200] animate-slideIn max-w-[260px] sm:max-w-sm">
+        <div className="fixed bottom-4 right-4 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white rounded-xl shadow-2xl p-2.5 z-[200] animate-slideIn max-w-[260px] sm:max-w-sm">
           <div className="flex items-center gap-2">
             <div className="bg-white/20 p-1 rounded-full text-xs">📞</div>
             <div className="flex-1 min-w-0">
@@ -747,7 +548,7 @@ const IndependentVilla = () => {
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes scale-in { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); } 50% { box-shadow: 0 0 15px rgba(34,197,94,0.8); } }
+        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); transform: rotate(0deg); } 50% { box-shadow: 0 0 20px rgba(34,197,94,0.8); transform: rotate(5deg); } }
         @keyframes rotate-slow { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
         .pulse-green { animation: pulse-green 2s infinite; }
         .rotate-slow { animation: rotate-slow 3s infinite; }
