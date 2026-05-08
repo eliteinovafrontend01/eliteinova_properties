@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, Search, Home, MapPin, Star, Filter, X, Building, Landmark, Warehouse, Building2 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import IndependentVilla from "../IndependentVilla";
+import BackgroundImage from '../assets/Villa/villabg.png';
 import IndependentVillaFilter from "../Filter/IndependentVillaFilter";
 
-// Fallback background if image doesn't exist
-const defaultBackground = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&h=1080&fit=crop";
+
 
 const IndependentVillaPage = () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const IndependentVillaPage = () => {
       <div
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: `url(${defaultBackground})`,
+          backgroundImage: `url(${BackgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
