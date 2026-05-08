@@ -238,7 +238,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                           {priceUnitSuffix.includes('/') ? priceUnitSuffix.split('/')[0] : priceUnitSuffix}
                         </span>
                         {priceUnitSuffix.includes('/') && priceUnitSuffix.split('/')[1] && (
-                          <span className="font-black text-slate-900 text-[8px] md:text-[10px] font-medium">
+                          <span className="font-black text-slate-900 text-[12px] md:text-[15px] font-medium">
                             /{priceUnitSuffix.split('/')[1]}
                           </span>
                         )}
@@ -257,14 +257,16 @@ const PropertyCard = ({ property, onContactClick }) => {
                 </div>
                 
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  {/* Independent Villa text - NO BACKGROUND, only increased font size with BLINK animation */}
+                  {/* Independent Villa text - NO BACKGROUND, INCREASED FONT SIZE, BLINK ANIMATION */}
                   <div className="flex items-center gap-2">
                     <span 
                       className="font-black text-[#00695C] uppercase tracking-wide blink-text"
                       style={{
-                        fontSize: '14px',
-                        animation: 'blinkText 1s ease-in-out infinite',
-                        textShadow: '0 0 5px rgba(0,105,92,0.3)'
+                         fontSize: '13px',
+      letterSpacing: '0.7px',
+      whiteSpace: 'nowrap',
+      WebkitFontSmoothing: 'antialiased',
+      textShadow: '0 0 5px rgba(0,105,92,0.5), 0 0 10px rgba(0,105,92,0.3)'
                       }}
                     >
                       {PAGE_NAME}
@@ -613,107 +615,107 @@ const IndependentVilla = () => {
 
       
       <style>{`
-        @keyframes fadeIn { 
-          from { opacity: 0; } 
-          to { opacity: 1; } 
-        }
-        
-        @keyframes slideIn { 
-          from { opacity: 0; transform: translateX(50px); } 
-          to { opacity: 1; transform: translateX(0); } 
-        }
-        
-        @keyframes scale-in { 
-          from { transform: scale(0.95); opacity: 0; } 
-          to { transform: scale(1); opacity: 1; } 
-        }
-        
-        @keyframes pulse-green { 
-          0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); transform: rotate(0deg); } 
-          50% { box-shadow: 0 0 20px rgba(34,197,94,0.8); transform: rotate(5deg); } 
-        }
-        
-        @keyframes rotate-slow { 
-          0%, 100% { transform: rotate(0deg); } 
-          50% { transform: rotate(5deg); } 
-        }
-        
-        /* Blink animation for Independent Villa word - NO BACKGROUND */
-        @keyframes blinkText {
-          0%, 100% {
-            opacity: 1;
-            text-shadow: 0 0 5px rgba(0,105,92,0.3);
-          }
-          50% {
-            opacity: 0.35;
-            text-shadow: 0 0 15px rgba(0,105,92,0.7);
-          }
-        }
-        
-        .blink-text {
-          animation: blinkText 1s ease-in-out infinite;
-        }
-        
-        /* Tag Jump Animation with Dark Box Shadow */
-        @keyframes tagJump {
-          0%, 100% {
-            transform: translateY(0px) scale(1);
-            box-shadow: 0 0 20px rgba(0,0,0,0.4), 0 0 10px rgba(0,105,92,0.8);
-          }
-          50% {
-            transform: translateY(-7px) scale(1.05);
-            box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 20px rgba(0,105,92,1), 0 5px 15px rgba(0,0,0,0.5);
-          }
-        }
-        
-        /* Contact Button Animation - Teal Theme */
-        @keyframes contactPulse {
-          0%, 100% {
-            box-shadow: 0 8px 20px rgba(0,105,92,0.3);
-          }
-          50% {
-            box-shadow: 0 8px 25px rgba(0,105,92,0.5), 0 0 0 3px rgba(38,166,154,0.2);
-          }
-        }
-        
-        .tag-animation {
-          animation: tagJump 1.5s ease-in-out infinite;
-        }
-        
-        .contact-button {
-          animation: contactPulse 2s ease-in-out infinite;
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .contact-button::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.3);
-          transform: translate(-50%, -50%);
-          transition: width 0.6s, height 0.6s;
-        }
-        
-        .contact-button:hover::before {
-          width: 300px;
-          height: 300px;
-        }
-        
-        .contact-button:hover {
-          animation: none;
-        }
-        
-        .pulse-green { animation: pulse-green 2s infinite; }
-        .rotate-slow { animation: rotate-slow 3s infinite; }
-        .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
-        .animate-slideIn { animation: slideIn 0.3s ease-out; }
-        .animate-scale-in { animation: scale-in 0.2s ease-out; }
-      `}</style>
+  @keyframes fadeIn { 
+    from { opacity: 0; } 
+    to { opacity: 1; } 
+  }
+  
+  @keyframes slideIn { 
+    from { opacity: 0; transform: translateX(50px); } 
+    to { opacity: 1; transform: translateX(0); } 
+  }
+  
+  @keyframes scale-in { 
+    from { transform: scale(0.95); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+  }
+  
+  @keyframes pulse-green { 
+    0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); transform: rotate(0deg); } 
+    50% { box-shadow: 0 0 20px rgba(34,197,94,0.8); transform: rotate(5deg); } 
+  }
+  
+  @keyframes rotate-slow { 
+    0%, 100% { transform: rotate(0deg); } 
+    50% { transform: rotate(5deg); } 
+  }
+  
+  /* Blink animation for Independent Villa word with THEME COLOR SHADOW */
+  @keyframes blinkText {
+    0%, 100% {
+      opacity: 1;
+      text-shadow: 0 0 5px rgba(0,105,92,0.5), 0 0 10px rgba(0,105,92,0.3);
+    }
+    50% {
+      opacity: 0.4;
+      text-shadow: 0 0 15px rgba(0,105,92,0.8), 0 0 25px rgba(0,105,92,0.5);
+    }
+  }
+  
+  .blink-text {
+    animation: blinkText 1s ease-in-out infinite;
+  }
+  
+  /* Tag Jump Animation */
+  @keyframes tagJump {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+      box-shadow: 0 0 20px rgba(0,0,0,0.4), 0 0 10px rgba(0,105,92,0.8);
+    }
+    50% {
+      transform: translateY(-7px) scale(1.05);
+      box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 20px rgba(0,105,92,1), 0 5px 15px rgba(0,0,0,0.5);
+    }
+  }
+  
+  /* Contact Button Animation - Teal Theme */
+  @keyframes contactPulse {
+    0%, 100% {
+      box-shadow: 0 8px 20px rgba(0,105,92,0.3);
+    }
+    50% {
+      box-shadow: 0 8px 25px rgba(0,105,92,0.5), 0 0 0 3px rgba(38,166,154,0.2);
+    }
+  }
+  
+  .tag-animation {
+    animation: tagJump 1.5s ease-in-out infinite;
+  }
+  
+  .contact-button {
+    animation: contactPulse 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .contact-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .contact-button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .contact-button:hover {
+    animation: none;
+  }
+  
+  .pulse-green { animation: pulse-green 2s infinite; }
+  .rotate-slow { animation: rotate-slow 3s infinite; }
+  .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+  .animate-slideIn { animation: slideIn 0.3s ease-out; }
+  .animate-scale-in { animation: scale-in 0.2s ease-out; }
+`}</style>
     </div>
   );
 };
