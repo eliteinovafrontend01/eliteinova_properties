@@ -18,24 +18,28 @@ const extractBHK = (highlights) => {
   return match ? match[1].trim() : '';
 };
 
-// Helper: format price with crores/lakhs - returns object with amount and unit
-const formatPriceAmount = (priceNum) => {
+// Helper: format price with crores/lakhs - preserves month units
+const formatPriceAmount = (priceNum, originalUnit) => {
   if (!priceNum) return { amount: priceNum, unit: '' };
+  
+  // Check if the original unit contains "month" - preserve it
+  const hasMonth = originalUnit && originalUnit.toLowerCase().includes('month');
+  
   // Remove ₹ and commas, convert to number
   const numeric = parseFloat(priceNum.replace(/[^0-9.-]/g, ''));
-  if (isNaN(numeric)) return { amount: priceNum, unit: '' };
+  if (isNaN(numeric)) return { amount: priceNum, unit: originalUnit || '' };
   
   if (numeric >= 10000000) { // 1 Crore = 10,000,000
     const crores = (numeric / 10000000).toFixed(2);
     const formatted = crores.endsWith('.00') ? crores.slice(0, -3) : crores;
-    return { amount: `₹${formatted}`, unit: 'Cr' };
+    return { amount: `₹${formatted}`, unit: hasMonth ? 'Cr/month' : 'Cr' };
   } else if (numeric >= 100000) { // 1 Lakh = 100,000
     const lakhs = (numeric / 100000).toFixed(2);
     const formatted = lakhs.endsWith('.00') ? lakhs.slice(0, -3) : lakhs;
-    return { amount: `₹${formatted}`, unit: 'L' };
+    return { amount: `₹${formatted}`, unit: hasMonth ? 'Lakh/month' : 'L' };
   }
-  // For smaller amounts, keep as is but still return object format
-  return { amount: priceNum, unit: '' };
+  // For smaller amounts, keep as is
+  return { amount: priceNum, unit: originalUnit || '' };
 };
 
 const PropertyCard = ({ property, onContactClick }) => {
@@ -103,8 +107,7 @@ const PropertyCard = ({ property, onContactClick }) => {
   const statusStyle = getStatusStyle(property.status);
 
   const { num: priceNumRaw, unit: priceUnit } = splitPrice(property.price);
-  const formattedPrice = formatPriceAmount(priceNumRaw);
-  // Use formatted amount if available, otherwise use original
+  const formattedPrice = formatPriceAmount(priceNumRaw, priceUnit);
   const priceAmount = formattedPrice.amount || priceNumRaw;
   const priceUnitSuffix = formattedPrice.unit || priceUnit;
   const bhk = extractBHK(property.highlights);
@@ -157,15 +160,16 @@ const PropertyCard = ({ property, onContactClick }) => {
           
           <div className="flex flex-col lg:flex-row gap-5">
             
-            {/* IMAGE SECTION */}
-            <div className="w-full lg:w-[35%] xl:w-[32%]">
-              <div className="flex flex-row bg-gray-100 rounded-xl overflow-hidden shadow-lg" style={{ height: '220px' }}>
+            {/* IMAGE SECTION - FIXED HEIGHT */}
+           <div className="w-full lg:w-[35%] xl:w-[32%]">
+              <div className="flex flex-row bg-gray-100 rounded-xl overflow-hidden shadow-lg" style={{ height: '260px', minHeight: '260px', flexShrink: 0 }}>
                 
                 <div className="flex-1 h-full overflow-hidden relative cursor-pointer" onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}>
                   <img
                     src={property.images[activeImg]}
                     alt="Villa"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover"
+                    style={{ height: '100%', width: '100%', objectFit: 'cover' }}
                     onError={(e) => {
                       e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=450&fit=crop';
                     }}
@@ -183,7 +187,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                 
                 <div 
                   className="h-full overflow-y-auto bg-white flex flex-col gap-1 p-1"
-                  style={{ width: imageCount <= 2 ? '70px' : imageCount <= 3 ? '75px' : imageCount <= 4 ? '80px' : '85px' }}
+                  style={{ width: imageCount <= 2 ? '70px' : imageCount <= 3 ? '75px' : imageCount <= 4 ? '80px' : '85px', height: '100%' }}
                 >
                   {property.images.map((img, idx) => {
                     const gapTotal = (imageCount - 1) * 4;
@@ -203,6 +207,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                           src={img}
                           className="w-full h-full object-cover"
                           alt="thumb"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           onError={(e) => {
                             e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop';
                           }}
@@ -222,35 +227,48 @@ const PropertyCard = ({ property, onContactClick }) => {
             {/* CONTENT SECTION */}
             <div className="flex-1 flex flex-col gap-2">
               
-              {/* PRICE AND HEADER - All price related text now same size */}
+              {/* PRICE AND HEADER */}
               <div className="flex flex-wrap justify-between items-start gap-2">
                 <div className="flex-1">
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-                    {/* Price amount - same size as before */}
                     <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceAmount}</span>
-                    {/* Unit (Cr / L / monthly) - NOW SAME SIZE as price amount */}
-                    {priceUnitSuffix && <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceUnitSuffix}</span>}
+                    {priceUnitSuffix && (
+                      <>
+                        <span className="font-black text-slate-900 text-2xl md:text-3xl">
+                          {priceUnitSuffix.includes('/') ? priceUnitSuffix.split('/')[0] : priceUnitSuffix}
+                        </span>
+                        {priceUnitSuffix.includes('/') && priceUnitSuffix.split('/')[1] && (
+                          <span className="font-black text-slate-900 text-[8px] md:text-[10px] font-medium">
+                            /{priceUnitSuffix.split('/')[1]}
+                          </span>
+                        )}
+                      </>
+                    )}
                     {bhk && <span className="font-bold text-[#00695C] text-base md:text-lg ml-1">({bhk})</span>}
                   </div>
                   
-                  {/* UPDATED: All text now using theme colors (teal/dark green) */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                    {/* ₹7,500 per sqft - Theme color */}
                     <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">{property.sqftPrice}</span>
-                    {/* 🟩 20,000 sqft Area - Theme color for text */}
                     <span className="text-[#00695C] font-bold flex items-center gap-1 text-xs md:text-sm">
                       <span className="text-[#26A69A] text-sm">🟩</span> {property.totalSqft}
                     </span>
-                    {/* 🏗️ 18,500 sqft (Built Up area) - Theme color for text */}
                     <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">🏗️ {property.builtUp}</span>
                   </div>
                 </div>
                 
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  {/* Independent Villa text */}
-                  <div className="flex items-center gap-2 font-extrabold text-[#004D40] uppercase tracking-wide text-[10px] md:text-[11px]">
-                    <span className="w-3 h-px bg-[#004D40]"></span>
-                    <span>{PAGE_NAME}</span>
+                  {/* Independent Villa text - NO BACKGROUND, only increased font size with BLINK animation */}
+                  <div className="flex items-center gap-2">
+                    <span 
+                      className="font-black text-[#00695C] uppercase tracking-wide blink-text"
+                      style={{
+                        fontSize: '14px',
+                        animation: 'blinkText 1s ease-in-out infinite',
+                        textShadow: '0 0 5px rgba(0,105,92,0.3)'
+                      }}
+                    >
+                      {PAGE_NAME}
+                    </span>
                   </div>
                   
                   {/* TAG with Animation */}
@@ -258,8 +276,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                     className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black tracking-wider uppercase flex items-center justify-center gap-1 whitespace-nowrap text-[10px] md:text-xs tag-animation"
                     style={{
                       clipPath: 'polygon(0% 0%, 100% 0%, 92% 50%, 100% 100%, 0% 100%, 8% 50%)',
-                      padding: '4px 16px',
-                      minWidth: '80px',
+                      padding: '2px 10px',
+                      minWidth: '40px',
                       animation: 'tagJump 1.5s ease-in-out infinite',
                       boxShadow: '0 0 20px rgba(0,0,0,0.4), 0 0 10px rgba(0,105,92,0.8)',
                       filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
@@ -334,7 +352,6 @@ const PropertyCard = ({ property, onContactClick }) => {
                     </div>
                   </div>
 
-                  {/* CONTACT BUTTON */}
                   <button
                     onClick={onContactClick}
                     onMouseEnter={() => setIsContactHovered(true)}
@@ -619,6 +636,22 @@ const IndependentVilla = () => {
         @keyframes rotate-slow { 
           0%, 100% { transform: rotate(0deg); } 
           50% { transform: rotate(5deg); } 
+        }
+        
+        /* Blink animation for Independent Villa word - NO BACKGROUND */
+        @keyframes blinkText {
+          0%, 100% {
+            opacity: 1;
+            text-shadow: 0 0 5px rgba(0,105,92,0.3);
+          }
+          50% {
+            opacity: 0.35;
+            text-shadow: 0 0 15px rgba(0,105,92,0.7);
+          }
+        }
+        
+        .blink-text {
+          animation: blinkText 1s ease-in-out infinite;
         }
         
         /* Tag Jump Animation with Dark Box Shadow */
