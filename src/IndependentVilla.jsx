@@ -22,23 +22,20 @@ const extractBHK = (highlights) => {
 const formatPriceAmount = (priceNum, originalUnit) => {
   if (!priceNum) return { amount: priceNum, unit: '' };
   
-  // Check if the original unit contains "month" - preserve it
   const hasMonth = originalUnit && originalUnit.toLowerCase().includes('month');
   
-  // Remove ₹ and commas, convert to number
   const numeric = parseFloat(priceNum.replace(/[^0-9.-]/g, ''));
   if (isNaN(numeric)) return { amount: priceNum, unit: originalUnit || '' };
   
-  if (numeric >= 10000000) { // 1 Crore = 10,000,000
+  if (numeric >= 10000000) {
     const crores = (numeric / 10000000).toFixed(2);
     const formatted = crores.endsWith('.00') ? crores.slice(0, -3) : crores;
     return { amount: `₹${formatted}`, unit: hasMonth ? 'Cr/month' : 'Cr' };
-  } else if (numeric >= 100000) { // 1 Lakh = 100,000
+  } else if (numeric >= 100000) {
     const lakhs = (numeric / 100000).toFixed(2);
     const formatted = lakhs.endsWith('.00') ? lakhs.slice(0, -3) : lakhs;
     return { amount: `₹${formatted}`, unit: hasMonth ? 'Lakh/month' : 'L' };
   }
-  // For smaller amounts, keep as is
   return { amount: priceNum, unit: originalUnit || '' };
 };
 
@@ -134,12 +131,6 @@ const PropertyCard = ({ property, onContactClick }) => {
     return '👤 Listed By';
   };
 
-  const getShortDetails = () => {
-    if (!property.agentDetails) return '';
-    if (property.agentDetails.length <= 40) return property.agentDetails;
-    return property.agentDetails.substring(0, 40) + '...';
-  };
-
   const imageCount = property.images.length;
 
   return (
@@ -160,8 +151,8 @@ const PropertyCard = ({ property, onContactClick }) => {
           
           <div className="flex flex-col lg:flex-row gap-5">
             
-            {/* IMAGE SECTION - FIXED HEIGHT */}
-           <div className="w-full lg:w-[35%] xl:w-[32%]">
+            {/* IMAGE SECTION */}
+            <div className="w-full lg:w-[35%] xl:w-[32%]">
               <div className="flex flex-row bg-gray-100 rounded-xl overflow-hidden shadow-lg" style={{ height: '260px', minHeight: '260px', flexShrink: 0 }}>
                 
                 <div className="flex-1 h-full overflow-hidden relative cursor-pointer" onDoubleClick={(e) => handleImageDoubleClick(activeImg, e)}>
@@ -212,9 +203,9 @@ const PropertyCard = ({ property, onContactClick }) => {
                             e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop';
                           }}
                         />
-                        {imageCount > 5 && idx === 2 && (
+                        {imageCount > 5 && idx === 3 && (
                           <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-[10px]">
-                            +{imageCount - 2}
+                            +{imageCount - 3}
                           </div>
                         )}
                       </div>
@@ -257,16 +248,15 @@ const PropertyCard = ({ property, onContactClick }) => {
                 </div>
                 
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  {/* Independent Villa text - NO BACKGROUND, INCREASED FONT SIZE, BLINK ANIMATION */}
+                  {/* Independent Villa text - BLINK ONLY, NO COLOR CHANGE */}
                   <div className="flex items-center gap-2">
                     <span 
                       className="font-black text-[#00695C] uppercase tracking-wide blink-text"
                       style={{
                          fontSize: '13px',
-      letterSpacing: '0.7px',
-      whiteSpace: 'nowrap',
-      WebkitFontSmoothing: 'antialiased',
-      textShadow: '0 0 5px rgba(0,105,92,0.5), 0 0 10px rgba(0,105,92,0.3)'
+                         letterSpacing: '0.7px',
+                         whiteSpace: 'nowrap',
+                         WebkitFontSmoothing: 'antialiased',
                       }}
                     >
                       {PAGE_NAME}
@@ -328,6 +318,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   
                   <div className="flex items-center gap-3 flex-1 min-w-[180px]">
+                    {/* Avatar */}
                     <div className="rounded-xl bg-gradient-to-br from-[#00695C] to-[#26A69A] flex items-center justify-center text-white font-black shadow-lg overflow-hidden shrink-0 w-10 h-10 md:w-12 md:h-12 text-base md:text-lg">
                       {property.logo && !logoError ? (
                         <img src={property.logo} alt="logo" className="w-full h-full object-cover" onError={() => setLogoError(true)} />
@@ -335,25 +326,24 @@ const PropertyCard = ({ property, onContactClick }) => {
                         <span>{property.postedBy.charAt(0)}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[#00695C] font-bold uppercase tracking-wider text-[8px] md:text-[9px]">{getListedByText()}</p>
-                      <div className="flex flex-wrap items-baseline gap-x-2">
-                        <p className="font-black text-slate-800 break-words text-sm md:text-base">{property.postedBy}</p>
-                        {property.agentDetails && (
-                          <span className="text-gray-600 truncate max-w-[100px] text-[9px] md:text-[10px]">({getShortDetails()})</span>
-                        )}
+
+                    {/* Name block */}
+                    <div className="flex flex-col min-w-0">
+                      <p className="text-[#00695C] font-bold uppercase tracking-wider text-[8px] md:text-[9px] leading-tight">{getListedByText()}</p>
+                      <div className="flex items-baseline gap-4.5 flex-wrap">
+                        <p className="font-black text-slate-800 text-sm md:text-base leading-snug">{property.postedBy}</p>
+                        <button 
+                          onClick={() => setShowAgentModal(true)} 
+                          className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.7 transition-all duration-300 hover:translate-x-1 text-sm font-medium whitespace-nowrap"
+                        >
+                          📖 View Details →
+                        </button>
                       </div>
-                      <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                        <span className="text-teal-600 font-medium text-[9px] md:text-[10px]">{getRoleTitle()}</span>
-                        {property.agentDetails && (
-                          <button onClick={() => setShowAgentModal(true)} className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.5 text-[9px] md:text-[10px] transition-all duration-300 hover:translate-x-0.5">
-                            📖 View Details →
-                          </button>
-                        )}
-                      </div>
+                      <span className="text-teal-600 font-medium text-[9px] md:text-[10px] leading-tight">{getRoleTitle()}</span>
                     </div>
                   </div>
 
+                  {/* Contact Button */}
                   <button
                     onClick={onContactClick}
                     onMouseEnter={() => setIsContactHovered(true)}
@@ -375,15 +365,19 @@ const PropertyCard = ({ property, onContactClick }) => {
                   </button>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      {/* COMPLETE DETAILS MODAL */}
+      {/* =============================================
+          COMPLETE DETAILS MODAL - Photos at the bottom
+      ============================================= */}
       {showAgentModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[200] flex items-center justify-center p-4 animate-fadeIn" onClick={() => setShowAgentModal(false)}>
           <div className="bg-white rounded-2xl max-w-[95%] sm:max-w-lg md:max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl animate-scale-in" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
             <div className="bg-gradient-to-r from-[#00695C] to-[#26A69A] p-5 rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
@@ -399,7 +393,9 @@ const PropertyCard = ({ property, onContactClick }) => {
               </div>
               <button onClick={() => setShowAgentModal(false)} className="text-white hover:text-gray-200 text-3xl transition-transform hover:scale-110">✕</button>
             </div>
+
             <div className="p-5">
+              {/* Posted By */}
               <div className="flex items-center gap-4 pb-4 border-b border-teal-100 mb-4">
                 <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#00695C] to-[#26A69A] flex items-center justify-center text-white font-black shadow-lg text-xl overflow-hidden">
                   {property.logo && !logoError ? (
@@ -414,6 +410,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                   <p className="text-xs md:text-sm text-teal-600 font-medium mt-0.5">{getRoleTitle()}</p>
                 </div>
               </div>
+
+              {/* Property Information */}
               <div className="mb-4">
                 <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                   <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
@@ -426,6 +424,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                   <p className="text-sm"><strong>📍 Location:</strong> {property.location}</p>
                 </div>
               </div>
+
+              {/* Property Highlights */}
               <div className="mb-4">
                 <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                   <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
@@ -439,6 +439,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                   </div>
                 </div>
               </div>
+
+              {/* About Agent/Owner */}
               <div className="mb-4">
                 <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                   <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
@@ -448,6 +450,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                   <p className="text-sm text-gray-700 leading-relaxed">{property.agentDetails || "No additional details provided."}</p>
                 </div>
               </div>
+
+              {/* Contact Information */}
               <div className="mb-4">
                 <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
                   <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
@@ -459,6 +463,8 @@ const PropertyCard = ({ property, onContactClick }) => {
                   <p className="text-sm flex items-center gap-2"><span className="text-teal-600">📍</span><span>{property.location}</span></p>
                 </div>
               </div>
+
+              {/* Additional Info */}
               {(property.experience || property.achievements) && (
                 <div className="mb-4">
                   <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
@@ -471,6 +477,49 @@ const PropertyCard = ({ property, onContactClick }) => {
                   </div>
                 </div>
               )}
+
+              {/* =============================================
+                  PHOTO SECTION - Right below Additional Information
+                  All photos as thumbnails - NO "View All" button
+              ============================================= */}
+              <div className="mb-4">
+                <h4 className="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
+                  <span className="w-3 h-3 bg-teal-500 rounded-full"></span>
+                  Photos Uploaded ({property.images.length} {property.images.length === 1 ? 'Photo' : 'Photos'})
+                </h4>
+                <div className="bg-teal-50/40 rounded-xl p-4">
+                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                    {property.images.map((img, idx) => (
+                      <div 
+                        key={idx} 
+                        className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group shadow-md hover:shadow-xl transition-all hover:scale-105"
+                        onClick={() => {
+                          setGalleryActiveImg(idx);
+                          setShowFullGallery(true);
+                          setShowAgentModal(false);
+                        }}
+                      >
+                        <img 
+                          src={img} 
+                          alt={`property-photo-${idx + 1}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=200&h=200&fit=crop';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <span className="text-white text-[10px] bg-black/60 px-2 py-0.5 rounded-full">Click</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-teal-600 mt-3 text-center">
+                    💡 Click on any photo to view larger gallery
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
               <div className="flex gap-3 mt-5 pt-4 border-t border-teal-100">
                 <button onClick={() => { setShowAgentModal(false); onContactClick(); }} className="flex-1 bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-105 shadow-lg">📞 Contact Now</button>
                 <button onClick={() => setShowAgentModal(false)} className="flex-1 bg-gray-100 text-gray-600 py-2.5 rounded-xl font-bold text-sm transition-all hover:bg-gray-200 shadow-sm">Close</button>
@@ -486,7 +535,7 @@ const PropertyCard = ({ property, onContactClick }) => {
           <div className="bg-gradient-to-r from-[#00695C] to-[#26A69A] p-3 md:p-4 flex justify-between items-center px-4 md:px-6">
             <div className="pr-2">
               <h3 className="text-white font-bold text-sm md:text-lg truncate max-w-[180px] md:max-w-none">{property.location.split(',')[0]}</h3>
-              <p className="text-white/80 text-[10px] md:text-xs mt-0.5">Double click any image to view full size</p>
+              <p className="text-white/80 text-[10px] md:text-xs mt-0.5">Click outside or press ESC to close</p>
             </div>
             <button onClick={() => setShowFullGallery(false)} className="text-white hover:text-gray-200 text-2xl md:text-3xl transition-transform hover:scale-110 shrink-0">✕</button>
           </div>
@@ -613,8 +662,7 @@ const IndependentVilla = () => {
         </div>
       )}
 
-      
-      <style>{`
+            <style>{`
   @keyframes fadeIn { 
     from { opacity: 0; } 
     to { opacity: 1; } 
@@ -640,23 +688,21 @@ const IndependentVilla = () => {
     50% { transform: rotate(5deg); } 
   }
   
-  /* Blink animation for Independent Villa word with THEME COLOR SHADOW */
+  /* FIXED: Only blinking effect - NO color change, NO opacity change */
   @keyframes blinkText {
     0%, 100% {
-      opacity: 1;
-      text-shadow: 0 0 5px rgba(0,105,92,0.5), 0 0 10px rgba(0,105,92,0.3);
+      transform: scale(1);
     }
     50% {
-      opacity: 0.4;
-      text-shadow: 0 0 15px rgba(0,105,92,0.8), 0 0 25px rgba(0,105,92,0.5);
+      transform: scale(0.97);
     }
   }
   
   .blink-text {
-    animation: blinkText 1s ease-in-out infinite;
+    animation: blinkText 0.8s ease-in-out infinite;
+    display: inline-block;
   }
   
-  /* Tag Jump Animation */
   @keyframes tagJump {
     0%, 100% {
       transform: translateY(0px) scale(1);
@@ -668,7 +714,6 @@ const IndependentVilla = () => {
     }
   }
   
-  /* Contact Button Animation - Teal Theme */
   @keyframes contactPulse {
     0%, 100% {
       box-shadow: 0 8px 20px rgba(0,105,92,0.3);
