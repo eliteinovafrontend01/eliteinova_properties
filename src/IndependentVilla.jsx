@@ -18,6 +18,26 @@ const extractBHK = (highlights) => {
   return match ? match[1].trim() : '';
 };
 
+// Helper: format price with crores/lakhs - returns object with amount and unit
+const formatPriceAmount = (priceNum) => {
+  if (!priceNum) return { amount: priceNum, unit: '' };
+  // Remove ₹ and commas, convert to number
+  const numeric = parseFloat(priceNum.replace(/[^0-9.-]/g, ''));
+  if (isNaN(numeric)) return { amount: priceNum, unit: '' };
+  
+  if (numeric >= 10000000) { // 1 Crore = 10,000,000
+    const crores = (numeric / 10000000).toFixed(2);
+    const formatted = crores.endsWith('.00') ? crores.slice(0, -3) : crores;
+    return { amount: `₹${formatted}`, unit: 'Cr' };
+  } else if (numeric >= 100000) { // 1 Lakh = 100,000
+    const lakhs = (numeric / 100000).toFixed(2);
+    const formatted = lakhs.endsWith('.00') ? lakhs.slice(0, -3) : lakhs;
+    return { amount: `₹${formatted}`, unit: 'L' };
+  }
+  // For smaller amounts, keep as is but still return object format
+  return { amount: priceNum, unit: '' };
+};
+
 const PropertyCard = ({ property, onContactClick }) => {
   const [activeImg, setActiveImg] = useState(0);
   const [showImageModal, setShowImageModal] = useState(false);
@@ -25,6 +45,8 @@ const PropertyCard = ({ property, onContactClick }) => {
   const [galleryActiveImg, setGalleryActiveImg] = useState(0);
   const [logoError, setLogoError] = useState(false);
   const [showAgentModal, setShowAgentModal] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isContactHovered, setIsContactHovered] = useState(false);
 
   const nextImg = (e) => {
     e.stopPropagation();
@@ -80,7 +102,11 @@ const PropertyCard = ({ property, onContactClick }) => {
 
   const statusStyle = getStatusStyle(property.status);
 
-  const { num: priceNum, unit: priceUnit } = splitPrice(property.price);
+  const { num: priceNumRaw, unit: priceUnit } = splitPrice(property.price);
+  const formattedPrice = formatPriceAmount(priceNumRaw);
+  // Use formatted amount if available, otherwise use original
+  const priceAmount = formattedPrice.amount || priceNumRaw;
+  const priceUnitSuffix = formattedPrice.unit || priceUnit;
   const bhk = extractBHK(property.highlights);
 
   const getRoleTitle = () => {
@@ -115,7 +141,17 @@ const PropertyCard = ({ property, onContactClick }) => {
 
   return (
     <>
-      <div className="w-full bg-white rounded-2xl shadow-2xl border border-teal-100 overflow-hidden transition-all duration-300 hover:shadow-3xl mb-6">
+      <div 
+        className="w-full bg-white rounded-2xl shadow-2xl border border-teal-100 overflow-hidden transition-all duration-500 hover:shadow-3xl mb-6 hover:-translate-y-1"
+        style={{
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: isHovered 
+            ? '0 25px 40px -12px rgba(0,105,92,0.4), 0 0 0 1px rgba(0,105,92,0.1)' 
+            : '0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.02)'
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         
         <div className="p-4 md:p-5">
           
@@ -186,35 +222,47 @@ const PropertyCard = ({ property, onContactClick }) => {
             {/* CONTENT SECTION */}
             <div className="flex-1 flex flex-col gap-2">
               
-              {/* PRICE AND HEADER */}
+              {/* PRICE AND HEADER - All price related text now same size */}
               <div className="flex flex-wrap justify-between items-start gap-2">
                 <div className="flex-1">
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0">
-                    <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceNum}</span>
-                    {priceUnit && <span className="font-bold text-slate-600 text-sm md:text-base">{priceUnit}</span>}
-                    {bhk && <span className="font-black text-[#00695C] text-xl md:text-2xl">({bhk})</span>}
+                    {/* Price amount - same size as before */}
+                    <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceAmount}</span>
+                    {/* Unit (Cr / L / monthly) - NOW SAME SIZE as price amount */}
+                    {priceUnitSuffix && <span className="font-black text-slate-900 text-2xl md:text-3xl">{priceUnitSuffix}</span>}
+                    {bhk && <span className="font-bold text-[#00695C] text-base md:text-lg ml-1">({bhk})</span>}
                   </div>
                   
+                  {/* UPDATED: All text now using theme colors (teal/dark green) */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
+                    {/* ₹7,500 per sqft - Theme color */}
                     <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">{property.sqftPrice}</span>
-                    <span className="text-slate-600 font-bold flex items-center gap-1 text-xs md:text-sm">📐 {property.totalSqft}</span>
-                    <span className="text-slate-500 bg-gray-100 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">🏗️ {property.builtUp}</span>
+                    {/* 🟩 20,000 sqft Area - Theme color for text */}
+                    <span className="text-[#00695C] font-bold flex items-center gap-1 text-xs md:text-sm">
+                      <span className="text-[#26A69A] text-sm">🟩</span> {property.totalSqft}
+                    </span>
+                    {/* 🏗️ 18,500 sqft (Built Up area) - Theme color for text */}
+                    <span className="text-[#00695C] font-bold bg-teal-50 px-2 py-1 rounded-md text-xs md:text-sm shadow-sm">🏗️ {property.builtUp}</span>
                   </div>
                 </div>
                 
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <div className="flex items-center gap-1 font-bold text-slate-500 uppercase tracking-wide text-[9px] md:text-[10px]">
-                    <span className="w-3 h-px bg-slate-300"></span>
+                  {/* Independent Villa text */}
+                  <div className="flex items-center gap-2 font-extrabold text-[#004D40] uppercase tracking-wide text-[10px] md:text-[11px]">
+                    <span className="w-3 h-px bg-[#004D40]"></span>
                     <span>{PAGE_NAME}</span>
                   </div>
                   
+                  {/* TAG with Animation */}
                   <div 
-                    className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black tracking-wider uppercase flex items-center justify-center gap-1 whitespace-nowrap text-[10px] md:text-xs"
+                    className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-black tracking-wider uppercase flex items-center justify-center gap-1 whitespace-nowrap text-[10px] md:text-xs tag-animation"
                     style={{
                       clipPath: 'polygon(0% 0%, 100% 0%, 92% 50%, 100% 100%, 0% 100%, 8% 50%)',
                       padding: '4px 16px',
                       minWidth: '80px',
-                      boxShadow: '0 0 15px rgba(0,105,92,0.5)',
+                      animation: 'tagJump 1.5s ease-in-out infinite',
+                      boxShadow: '0 0 20px rgba(0,0,0,0.4), 0 0 10px rgba(0,105,92,0.8)',
+                      filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
                     }}
                   >
                     <span className="text-xs md:text-sm">
@@ -241,14 +289,14 @@ const PropertyCard = ({ property, onContactClick }) => {
 
               {/* HIGHLIGHTS */}
               <div>
-                <p className="font-black text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-2 text-[9px] md:text-[10px]">
-                  <span className="w-5 h-px bg-[#26A69A]"></span>
+                <p className="font-black text-[#004D40] uppercase tracking-wider mb-1.5 flex items-center gap-3 text-[10px] md:text-[11px]">
+                  <span className="w-5 h-px bg-[#004D40]"></span>
                   Property Highlights
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {property.highlights.split('|').map((h, i) => (
-                    <div key={i} className="flex items-center gap-1 bg-gray-50 text-slate-700 px-2 py-1 rounded-lg border border-gray-200 font-medium text-[10px] md:text-xs shadow-sm">
-                      <span className="w-1 h-1 rounded-full bg-[#26A69A] shrink-0"></span>
+                    <div key={i} className="flex items-center gap-1 bg-gray-50 text-[#004D40] px-2 py-1 rounded-lg border border-gray-200 font-medium text-[10px] md:text-xs shadow-sm">
+                      <span className="w-1 h-1 rounded-full bg-[#00695C] shrink-0"></span>
                       <span>{h.trim()}</span>
                     </div>
                   ))}
@@ -278,7 +326,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                       <div className="flex items-center gap-2 flex-wrap mt-0.5">
                         <span className="text-teal-600 font-medium text-[9px] md:text-[10px]">{getRoleTitle()}</span>
                         {property.agentDetails && (
-                          <button onClick={() => setShowAgentModal(true)} className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.5 text-[9px] md:text-[10px]">
+                          <button onClick={() => setShowAgentModal(true)} className="text-teal-500 hover:text-teal-700 underline flex items-center gap-0.5 text-[9px] md:text-[10px] transition-all duration-300 hover:translate-x-0.5">
                             📖 View Details →
                           </button>
                         )}
@@ -286,22 +334,24 @@ const PropertyCard = ({ property, onContactClick }) => {
                     </div>
                   </div>
 
+                  {/* CONTACT BUTTON */}
                   <button
                     onClick={onContactClick}
-                    className="bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white font-bold rounded-lg flex items-center gap-1 whitespace-nowrap transition-all duration-300 shrink-0 px-4 md:px-5 py-1.5 md:py-2 text-xs md:text-sm"
+                    onMouseEnter={() => setIsContactHovered(true)}
+                    onMouseLeave={() => setIsContactHovered(false)}
+                    className="bg-gradient-to-r from-[#00695C] to-[#26A69A] text-white font-bold rounded-lg flex items-center gap-1 whitespace-nowrap transition-all duration-300 shrink-0 px-4 md:px-5 py-1.5 md:py-2 text-xs md:text-sm contact-button"
                     style={{
-                      boxShadow: '0 8px 20px rgba(0,105,92,0.3)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 12px 25px rgba(0,105,92,0.4)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,105,92,0.3)';
+                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                      transform: isContactHovered ? 'translateY(-2px) scale(1.02)' : 'translateY(0) scale(1)',
+                      boxShadow: isContactHovered 
+                        ? '0 12px 30px rgba(0,105,92,0.5), 0 0 0 3px rgba(38,166,154,0.3)' 
+                        : '0 8px 20px rgba(0,105,92,0.3)',
+                      animation: 'contactPulse 2s ease-in-out infinite'
                     }}
                   >
-                    <span className="text-xs md:text-sm">📞</span>
+                    <span className="text-xs md:text-sm transition-transform duration-300" style={{
+                      transform: isContactHovered ? 'scale(1.1) rotate(-5deg)' : 'scale(1) rotate(0)'
+                    }}>📞</span>
                     Contact
                   </button>
                 </div>
@@ -318,8 +368,8 @@ const PropertyCard = ({ property, onContactClick }) => {
             <div className="bg-gradient-to-r from-[#00695C] to-[#26A69A] p-5 rounded-t-2xl flex justify-between items-center sticky top-0 z-10">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl">
-                  {property.tag === 'BUY' && '🏠'}
-                  {property.tag === 'SELL' && '💰'}
+                  {property.tag === 'BUY' && '💰'}
+                  {property.tag === 'SELL' && '🏷️'}
                   {property.tag === 'RENT' && '🔑'}
                   {property.tag === 'LEASE' && '📄'}
                 </div>
@@ -353,7 +403,7 @@ const PropertyCard = ({ property, onContactClick }) => {
                 <div className="bg-teal-50/50 rounded-xl p-4 space-y-2">
                   <p className="text-sm"><strong>Property ID:</strong> {property.id}</p>
                   <p className="text-sm"><strong>Listed Price:</strong> {property.price} {bhk && `(${bhk})`}</p>
-                  <p className="text-sm"><strong>{property.sqftPrice}</strong> • 📐 {property.totalSqft} • 🏗️ {property.builtUp}</p>
+                  <p className="text-sm"><strong>{property.sqftPrice}</strong> • 🟩 {property.totalSqft} • 🏗️ {property.builtUp}</p>
                   <p className="text-sm"><strong>📍 Location:</strong> {property.location}</p>
                 </div>
               </div>
@@ -544,12 +594,87 @@ const IndependentVilla = () => {
         </div>
       )}
 
+      
       <style>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes scale-in { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); transform: rotate(0deg); } 50% { box-shadow: 0 0 20px rgba(34,197,94,0.8); transform: rotate(5deg); } }
-        @keyframes rotate-slow { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(5deg); } }
+        @keyframes fadeIn { 
+          from { opacity: 0; } 
+          to { opacity: 1; } 
+        }
+        
+        @keyframes slideIn { 
+          from { opacity: 0; transform: translateX(50px); } 
+          to { opacity: 1; transform: translateX(0); } 
+        }
+        
+        @keyframes scale-in { 
+          from { transform: scale(0.95); opacity: 0; } 
+          to { transform: scale(1); opacity: 1; } 
+        }
+        
+        @keyframes pulse-green { 
+          0%, 100% { box-shadow: 0 0 5px rgba(34,197,94,0.5); transform: rotate(0deg); } 
+          50% { box-shadow: 0 0 20px rgba(34,197,94,0.8); transform: rotate(5deg); } 
+        }
+        
+        @keyframes rotate-slow { 
+          0%, 100% { transform: rotate(0deg); } 
+          50% { transform: rotate(5deg); } 
+        }
+        
+        /* Tag Jump Animation with Dark Box Shadow */
+        @keyframes tagJump {
+          0%, 100% {
+            transform: translateY(0px) scale(1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.4), 0 0 10px rgba(0,105,92,0.8);
+          }
+          50% {
+            transform: translateY(-7px) scale(1.05);
+            box-shadow: 0 0 30px rgba(0,0,0,0.6), 0 0 20px rgba(0,105,92,1), 0 5px 15px rgba(0,0,0,0.5);
+          }
+        }
+        
+        /* Contact Button Animation - Teal Theme */
+        @keyframes contactPulse {
+          0%, 100% {
+            box-shadow: 0 8px 20px rgba(0,105,92,0.3);
+          }
+          50% {
+            box-shadow: 0 8px 25px rgba(0,105,92,0.5), 0 0 0 3px rgba(38,166,154,0.2);
+          }
+        }
+        
+        .tag-animation {
+          animation: tagJump 1.5s ease-in-out infinite;
+        }
+        
+        .contact-button {
+          animation: contactPulse 2s ease-in-out infinite;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .contact-button::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          transform: translate(-50%, -50%);
+          transition: width 0.6s, height 0.6s;
+        }
+        
+        .contact-button:hover::before {
+          width: 300px;
+          height: 300px;
+        }
+        
+        .contact-button:hover {
+          animation: none;
+        }
+        
         .pulse-green { animation: pulse-green 2s infinite; }
         .rotate-slow { animation: rotate-slow 3s infinite; }
         .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
